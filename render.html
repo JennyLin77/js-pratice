@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 虚拟 Dom 转化为真实 Dom
+        function render(vnode) {
+            if (['string', 'number'].includes(typeof vnode)) {
+                return document.createTextNode(vnode);
+            }
+            const node = document.createElement(vnode.tag);
+            if (vnode.attrs) {
+                Object.entries(vnode.attrs).forEach(([key, val]) => {
+                    node.setAttribute(key, val);
+                })
+            }
+            vnode.children?.forEach(child => {
+                node.appendChild(render(child))
+            });
+            return node;
+        }
+
+        const dom = {
+            tag: 'DIV',
+            attrs: {
+                id: 'app'
+            },
+            children: [{
+                    tag: 'SPAN',
+                    children: [{
+                        tag: 'A',
+                        children: []
+                    }]
+                },
+                {
+                    tag: 'SPAN',
+                    children: [{
+                            tag: 'A',
+                            children: []
+                        },
+                        {
+                            tag: 'A',
+                            children: []
+                        }
+                    ]
+                }
+            ]
+        };
+        console.log(render(dom));
+        console.log(render(123));
+    </script>
+</body>
+</html>
